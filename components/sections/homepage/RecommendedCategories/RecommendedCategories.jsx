@@ -21,13 +21,24 @@ const RecommendedCategories = ({ categories }) => {
             {category?.images?.image && (
               <Image
                 src={category?.images?.image}
+                priority={index < 3}
                 alt="category"
                 className="object-cover transition-all duration-700 ease-in-out hover:scale-110"
                 fill
+                style={{
+                  willChange: "transform",
+                }}
+                unoptimized={true}
+                referrerPolicy="no-referrer-when-downgrade"
+                onError={(e) => {
+                  e.target.src = category?.images?.image
+                    ? category?.images?.image
+                    : "/";
+                }}
               />
             )}
             <div className="absolute bottom-8 left-0 z-10 flex w-full items-center justify-center px-3">
-              <h3 className="text-center text-2xl font-normal text-whiteSmoke sm:text-3xl lg:text-4xl 2xl:text-5xl">
+              <h3 className="text-center text-2xl font-light text-black sm:text-3xl lg:text-4xl 2xl:text-5xl">
                 {category?.basic_data?.name}
               </h3>
             </div>

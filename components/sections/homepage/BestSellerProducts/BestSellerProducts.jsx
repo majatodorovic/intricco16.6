@@ -5,6 +5,8 @@ import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { Thumb } from "@/components/Thumb/Thumb";
+import { useQuery } from "@tanstack/react-query";
+import { list } from "@/api/api";
 
 const LoadingSkeleton = () => (
   <div className={`flex gap-[25px]`}>
@@ -15,7 +17,17 @@ const LoadingSkeleton = () => (
   </div>
 );
 
-const BestSellerProducts = ({ products }) => {
+const BestSellerProducts = () => {
+  const { data: products } = useQuery({
+    queryKey: ["best_sell"],
+    queryFn: async () => {
+      return await list(`/products/section/list/best_sell`).then((res) => {
+        return res?.payload?.items;
+      });
+    },
+    refetchOnWindowFocus: false,
+  });
+
   const swiperRef = useRef(null);
   const thumbRef = useRef(null);
   const [showArrows, setShowArrows] = useState(false);
@@ -29,6 +41,8 @@ const BestSellerProducts = ({ products }) => {
   }, [products]);
 
   useEffect(() => {
+    if (!products) return;
+
     const updateShowArrows = () => {
       const screenWidth = window.innerWidth;
       let slidesPerView = 1;
@@ -50,6 +64,10 @@ const BestSellerProducts = ({ products }) => {
       setThumbHeight(thumbRef.current.clientHeight);
     }
   }, [isSwiperReady]);
+
+  if (!products || products?.length == 0) {
+    return <></>;
+  }
 
   return (
     <div className="sectionWidth mt-8 lg:mt-12">

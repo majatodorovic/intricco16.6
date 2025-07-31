@@ -2,66 +2,54 @@ import { get, list } from "@/api/api";
 import { headers } from "next/headers";
 import { generateOrganizationSchema } from "@/_functions";
 import BannerWithProducts from "@/components/sections/homepage/BannerWithProducts/BannerWithProducts";
-import BestSellerProducts from "@/components/sections/homepage/BestSellerProducts/BestSellerProducts";
-import PromoBanner from "@/components/sections/homepage/PromoBanner/PromoBanner";
-import SlimBanner from "@/components/sections/homepage/SlimBanner/SlimBanner";
 import RecommendedCategories from "@/components/sections/homepage/RecommendedCategories/RecommendedCategories";
 import Slider from "@/components/sections/homepage/Slider/Slider";
+import SlimBanner from "@/components/sections/homepage/SlimBanner/SlimBanner";
+import PromoBanner from "@/components/sections/homepage/PromoBanner/PromoBanner";
+import BestSellerProducts from "@/components/sections/homepage/BestSellerProducts/BestSellerProducts";
 import Retails from "@/components/sections/homepage/Retails/Retails";
 
-const getSliders = () => {
+const getSliders = async () => {
   return get("/banners/index_slider").then((res) => res?.payload);
 };
-const getMobileSliders = () => {
+const getMobileSliders = async () => {
   return get("/banners/index_slider_mobile").then((res) => res?.payload);
 };
-const getSlimBanners = () => {
-  return get("/banners/banner_1").then((res) => res?.payload);
-};
-const getMobileSlimBanners = () => {
-  return get("/banners/banner_1_mobile").then((res) => res?.payload);
-};
-const getBannerBeforeProducts = () => {
+const getBannerBeforeProducts = async () => {
   return get("/banners/banner_2").then((res) => res?.payload);
 };
-const getMobileBannerBeforeProducts = () => {
+const getMobileBannerBeforeProducts = async () => {
   return get("/banners/banner_2_mobile").then((res) => res?.payload);
 };
-const getPromoBanners = () => {
-  return get("/banners/promo_page_banner").then((res) => res?.payload);
-};
 
-const getMobilePromoBanners = () => {
-  return get("/banners/promo_page_banner_mobile").then((res) => res?.payload);
-};
-const getRecommendedProducts = () => {
+const getRecommendedProducts = async () => {
   return list("/products/section/list/recommendation?limit=4").then(
     (res) => res?.payload?.items,
   );
 };
-const getBestSellProducts = () => {
-  return list("/products/section/list/best_sell").then(
-    (res) => res?.payload?.items,
-  );
-};
-const getRecomendedCategories = () => {
+
+const getRecomendedCategories = async () => {
   return list("/categories/section/recommended?limit=3").then(
     (res) => res?.payload,
   );
 };
 
 const Home = async () => {
-  const sliders = await getSliders();
-  const mobileSliders = await getMobileSliders();
-  const slimBanners = await getSlimBanners();
-  const mobileSlimBanners = await getMobileSlimBanners();
-  const bannerBeforeProducts = await getBannerBeforeProducts();
-  const mobileBannerBeforeProducts = await getMobileBannerBeforeProducts();
-  const recommendedCategories = await getRecomendedCategories();
-  const recommendedProducts = await getRecommendedProducts();
-  const bestSellProducts = await getBestSellProducts();
-  const promoBanners = await getPromoBanners();
-  const mobilePromoBanners = await getMobilePromoBanners();
+  const [
+    sliders,
+    mobileSliders,
+    bannerBeforeProducts,
+    mobileBannerBeforeProducts,
+    recommendedCategories,
+    recommendedProducts,
+  ] = await Promise.all([
+    getSliders(),
+    getMobileSliders(),
+    getBannerBeforeProducts(),
+    getMobileBannerBeforeProducts(),
+    getRecomendedCategories(),
+    getRecommendedProducts(),
+  ]);
 
   let all_headers = headers();
   let base_url = all_headers.get("x-base_url");
@@ -79,19 +67,15 @@ const Home = async () => {
           <Slider banners={sliders} mobileBanners={mobileSliders} />
         </div>
         <RecommendedCategories categories={recommendedCategories} />
-        <SlimBanner banners={slimBanners} mobileBanners={mobileSlimBanners} />
+
+        <SlimBanner />
         <BannerWithProducts
           banners={bannerBeforeProducts}
           mobileBanners={mobileBannerBeforeProducts}
           products={recommendedProducts}
         />
-        <PromoBanner
-          banners={promoBanners}
-          mobileBanners={mobilePromoBanners}
-        />
-        {bestSellProducts?.length > 0 && (
-          <BestSellerProducts products={bestSellProducts} />
-        )}
+        <PromoBanner />
+        <BestSellerProducts />
         <Retails />
       </div>
     </>
@@ -110,6 +94,11 @@ export const generateMetadata = async () => {
   const data = await getSEO();
   const header_list = headers();
   let canonical = header_list.get("x-pathname");
+
+  const shareImage =
+    data?.social?.share_image ||
+    "https://www.intriccounderwear.rs/images/logo/logo.png";
+
   return {
     title: data?.meta_title ?? "Početna | Intricco Underwear",
     description:
@@ -129,7 +118,7 @@ export const generateMetadata = async () => {
       type: "website",
       images: [
         {
-          url: data?.social?.share_image ?? "",
+          url: shareImage,
           width: 800,
           height: 600,
           alt: "Intricco Underwear",

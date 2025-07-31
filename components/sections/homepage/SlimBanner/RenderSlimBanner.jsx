@@ -17,6 +17,7 @@ const RenderSlimBanner = ({ banners }) => {
                   width={0}
                   height={0}
                   className="h-auto w-full"
+                  referrerPolicy="origin"
                 />
                 <div className="absolute left-1/2 top-1/2 z-[50] flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-5 p-5 text-white">
                   {banner?.title && (

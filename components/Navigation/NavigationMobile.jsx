@@ -165,6 +165,7 @@ const NavigationMobile = () => {
                 width={150}
                 height={33}
                 className="h-auto w-36"
+                loading="eager"
               />
             </div>
           </Link>

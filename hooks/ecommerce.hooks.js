@@ -922,15 +922,15 @@ export const useUpSellProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["upSellProducts", id],
     queryFn: async () => {
-      return await LIST(`/product-details/up-sell/${id}`, {
-        render: false,
-      }).then((res) => {
-        return res?.payload;
-      });
+      const res = await LIST(`/product-details/up-sell/${id}`, { render: false });
+
+      // Ako payload ne postoji (npr. zbog greške sa tokenom), vrati prazan niz da ne puca UI
+      return res?.payload || { items: [] };
     },
     refetchOnWindowFocus: false,
   });
 };
+
 
 //hook za dobijanje svih artikala u korpi
 export const useCart = () => {

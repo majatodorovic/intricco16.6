@@ -70,11 +70,13 @@ const Specifications = ({ id }) => {
                 }`}
               />
             </div>
-            {activeTab === "description" && (
+            {activeTab === "description" && desc?.description && (
               <div
                 className={`customScroll max-h-[150px] overflow-y-auto py-2 lg:px-3`}
               >
-                <p dangerouslySetInnerHTML={{ __html: desc?.description }}></p>
+                <div
+                  dangerouslySetInnerHTML={{ __html: desc?.description }}
+                ></div>
               </div>
             )}
           </div>

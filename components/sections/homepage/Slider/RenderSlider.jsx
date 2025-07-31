@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { convertHttpToHttps } from "@/helpers/convertHttpToHttps";
@@ -18,16 +18,40 @@ function extractYoutubeId(url) {
 const RenderBanner = ({ banner }) => {
   switch (banner.type) {
     case "image": {
+      const imageUrl = banner?.image ? `${banner?.image}?${Date.now()}` : "/";
       return (
-        <Image
-          src={banner?.image ?? "/"}
+        <img
+          src={imageUrl}
           alt={banner?.title ?? "Alt"}
-          width={0}
-          height={0}
-          sizes={`100vw`}
-          className="h-auto w-full"
-          priority
+          className="w-full"
+          style={{ objectFit: "cover" }}
+          onError={(e) => {
+            e.target.style.display = "none";
+          }}
+          onLoad={(e) => {
+            if (
+              navigator.userAgent.includes("FBAN") ||
+              navigator.userAgent.includes("FBAV")
+            ) {
+              e.target.style.display = "block";
+              e.target.nextSibling.style.display = "none";
+            }
+          }}
         />
+        // <Image
+        //   src={banner?.image ? `${banner?.image}?v=1` : "/"}
+        //   alt={banner?.title ?? "Alt"}
+        //   width={1920}
+        //   height={800}
+        //   sizes={`100vw`}
+        //   className="h-auto w-full"
+        //   priority
+        //   unoptimized={true}
+        //   referrerPolicy="no-referrer"
+        //   onError={(e) => {
+        //     e.target.src = banner?.image ? banner?.image : "/";
+        //   }}
+        // />
       );
     }
     case "video_link": {
@@ -118,19 +142,19 @@ const RenderSlider = ({ banners }) => {
               <div className="absolute right-[140px] top-1/2 flex -translate-y-1/2 transform flex-col items-center justify-center gap-[33px] text-center max-2xl:right-[100px] max-lg:right-24 max-md:left-1/2 max-md:top-1/2 max-md:w-[250px] max-md:-translate-x-1/2 max-md:-translate-y-1/2 max-md:transform md:max-w-[600px] md:items-end md:justify-end md:text-right">
                 {banner?.title && (
                   <h1
-                    className="text-6xl font-light text-black max-2xl:text-5xl max-lg:text-3xl"
+                    className="text-6xl font-light text-white max-2xl:text-5xl max-lg:text-3xl"
                     dangerouslySetInnerHTML={{ __html: banner?.title }}
                   />
                 )}
                 {banner?.subtitle && (
                   <h2
-                    className="text-2xl font-light uppercase text-black max-lg:text-xl"
+                    className="text-2xl font-light uppercase text-white max-lg:text-xl"
                     dangerouslySetInnerHTML={{ __html: banner?.subtitle }}
                   />
                 )}
                 {banner?.text && (
                   <p
-                    className="text-xl font-light text-black max-2xl:text-lg max-lg:text-base md:max-w-[400px]"
+                    className="text-xl font-light text-white max-2xl:text-lg max-lg:text-base md:max-w-[400px]"
                     dangerouslySetInnerHTML={{ __html: banner?.text }}
                   ></p>
                 )}

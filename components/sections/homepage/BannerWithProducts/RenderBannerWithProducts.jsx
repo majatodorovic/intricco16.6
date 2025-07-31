@@ -25,6 +25,7 @@ const RenderBannerWithProducts = ({ banners, products, bannersMobile }) => {
                   width={0}
                   height={0}
                   className="h-full w-full object-cover"
+                  referrerPolicy="origin"
                 />
                 <div className="absolute bottom-6 left-8 z-[50] flex flex-col items-start gap-1 text-black">
                   {banner?.title && (

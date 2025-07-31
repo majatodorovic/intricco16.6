@@ -38,6 +38,14 @@ export default async function RootLayout({ children }) {
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
         />
+
+        <link
+          rel="preconnect"
+          href="https://api.intricco.croonus.com"
+          crossOrigin="true"
+        />
+        <link rel="dns-prefetch" href="https://api.intricco.croonus.com" />
+
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <Script
           dangerouslySetInnerHTML={{
@@ -48,6 +56,11 @@ export default async function RootLayout({ children }) {
             })(window,document,'script','dataLayer','${process.env.GTM_ID}');`,
           }}
         />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
       <body className="relative">
         <noscript>
