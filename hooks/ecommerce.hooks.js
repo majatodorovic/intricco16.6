@@ -877,15 +877,15 @@ export const useRelatedProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["relatedProducts", id],
     queryFn: async () => {
-      return await LIST(`/product-details/related/${id}`, {
+      const res = await LIST(`/product-details/related/${id}`, {
         render: false,
-      }).then((res) => {
-        return res?.payload;
       });
+      return res?.payload ?? { items: [] };  // fallback na prazan objekat sa items
     },
     refetchOnWindowFocus: false,
   });
 };
+
 
 // hook za dobijanje recommended artikala na detaljnoj strani
 export const useCrossSellProducts = ({ id }) => {
