@@ -887,6 +887,7 @@ export const useRelatedProducts = ({ id }) => {
   });
 };
 
+// hook za dobijanje recommended artikala na detaljnoj strani
 export const useCrossSellProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["crossSellProducts", id],
@@ -894,17 +895,14 @@ export const useCrossSellProducts = ({ id }) => {
       return await LIST(`/product-details/cross-sell/${id}`, {
         render: false,
       }).then((res) => {
-        if (!res || !Array.isArray(res.payload)) {
-          console.warn(`Greška u cross-sell za ID: ${id}`, res?.payload);
-          return [];
-        }
-        return res.payload;
+        return res?.payload;
       });
     },
     refetchOnWindowFocus: false,
   });
 };
 
+//hook za dobijanje recommended artikala na detaljnoj strani
 export const useRecommendedProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["recommendedProducts", id],
@@ -912,17 +910,14 @@ export const useRecommendedProducts = ({ id }) => {
       return await LIST(`/product-details/recommended/${id}`, {
         render: false,
       }).then((res) => {
-        if (!res || !Array.isArray(res.payload)) {
-          console.warn(`Greška u recommended za ID: ${id}`, res?.payload);
-          return [];
-        }
-        return res.payload;
+        return res?.payload;
       });
     },
     refetchOnWindowFocus: false,
   });
 };
 
+//hook za dobijanje related artikala na detaljnoj strani
 export const useUpSellProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["upSellProducts", id],
@@ -930,17 +925,12 @@ export const useUpSellProducts = ({ id }) => {
       return await LIST(`/product-details/up-sell/${id}`, {
         render: false,
       }).then((res) => {
-        if (!res || !Array.isArray(res.payload)) {
-          console.warn(`Greška u up-sell za ID: ${id}`, res?.payload);
-          return [];
-        }
-        return res.payload;
+        return res?.payload;
       });
     },
     refetchOnWindowFocus: false,
   });
 };
-
 
 //hook za dobijanje svih artikala u korpi
 export const useCart = () => {
