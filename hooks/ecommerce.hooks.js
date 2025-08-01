@@ -887,7 +887,6 @@ export const useRelatedProducts = ({ id }) => {
   });
 };
 
-// Hook za cross-sell proizvode
 export const useCrossSellProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["crossSellProducts", id],
@@ -895,19 +894,17 @@ export const useCrossSellProducts = ({ id }) => {
       return await LIST(`/product-details/cross-sell/${id}`, {
         render: false,
       }).then((res) => {
-        const data = res?.payload;
-        if (!Array.isArray(data)) {
-          console.warn(`Greška u cross-sell za ID: ${id}`, data);
+        if (!res || !Array.isArray(res.payload)) {
+          console.warn(`Greška u cross-sell za ID: ${id}`, res?.payload);
           return [];
         }
-        return data;
+        return res.payload;
       });
     },
     refetchOnWindowFocus: false,
   });
 };
 
-// Hook za recommended proizvode
 export const useRecommendedProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["recommendedProducts", id],
@@ -915,19 +912,17 @@ export const useRecommendedProducts = ({ id }) => {
       return await LIST(`/product-details/recommended/${id}`, {
         render: false,
       }).then((res) => {
-        const data = res?.payload;
-        if (!Array.isArray(data)) {
-          console.warn(`Greška u recommended za ID: ${id}`, data);
+        if (!res || !Array.isArray(res.payload)) {
+          console.warn(`Greška u recommended za ID: ${id}`, res?.payload);
           return [];
         }
-        return data;
+        return res.payload;
       });
     },
     refetchOnWindowFocus: false,
   });
 };
 
-// Hook za up-sell proizvode
 export const useUpSellProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["upSellProducts", id],
@@ -935,12 +930,11 @@ export const useUpSellProducts = ({ id }) => {
       return await LIST(`/product-details/up-sell/${id}`, {
         render: false,
       }).then((res) => {
-        const data = res?.payload;
-        if (!Array.isArray(data)) {
-          console.warn(`Greška u up-sell za ID: ${id}`, data);
+        if (!res || !Array.isArray(res.payload)) {
+          console.warn(`Greška u up-sell za ID: ${id}`, res?.payload);
           return [];
         }
-        return data;
+        return res.payload;
       });
     },
     refetchOnWindowFocus: false,
