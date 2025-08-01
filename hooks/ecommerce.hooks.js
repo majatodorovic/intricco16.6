@@ -892,45 +892,45 @@ export const useCrossSellProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["crossSellProducts", id],
     queryFn: async () => {
-      return await LIST(`/product-details/cross-sell/${id}`, {
+      const res = await LIST(`/product-details/cross-sell/${id}`, {
         render: false,
-      }).then((res) => {
-        return res?.payload;
       });
+      return res?.payload || { items: [] };
     },
     refetchOnWindowFocus: false,
   });
 };
+
 
 //hook za dobijanje recommended artikala na detaljnoj strani
 export const useRecommendedProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["recommendedProducts", id],
     queryFn: async () => {
-      return await LIST(`/product-details/recommended/${id}`, {
+      const res = await LIST(`/product-details/recommended/${id}`, {
         render: false,
-      }).then((res) => {
-        return res?.payload;
       });
+      return res?.payload || { items: [] };
     },
     refetchOnWindowFocus: false,
   });
 };
+
 
 //hook za dobijanje related artikala na detaljnoj strani
 export const useUpSellProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["upSellProducts", id],
     queryFn: async () => {
-      return await LIST(`/product-details/up-sell/${id}`, {
+      const res = await LIST(`/product-details/up-sell/${id}`, {
         render: false,
-      }).then((res) => {
-        return res?.payload;
       });
+      return res?.payload || { items: [] };
     },
     refetchOnWindowFocus: false,
   });
 };
+
 
 //hook za dobijanje svih artikala u korpi
 export const useCart = () => {
