@@ -1,7 +1,6 @@
 "use client";
 import { useIsMounted } from "./useIsMounted";
 import { useContext, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   useInfiniteQuery,
   useMutation,
@@ -888,28 +887,27 @@ export const useRelatedProducts = ({ id }) => {
   });
 };
 
-// hook za dobijanje recommended artikala na detaljnoj strani
-
+// Hook za cross-sell proizvode
 export const useCrossSellProducts = ({ id }) => {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: ["crossSellProducts", id],
     queryFn: async () => {
-      const res = await LIST(`/product-details/cross-sell/${id}`, {
+      return await LIST(`/product-details/cross-sell/${id}`, {
         render: false,
+      }).then((res) => {
+        const data = res?.payload;
+        if (!Array.isArray(data)) {
+          console.warn(`Greška u cross-sell za ID: ${id}`, data);
+          return [];
+        }
+        return data;
       });
-
-      if (!res?.payload) {
-        return { items: [] };
-      }
-
-      return res.payload;
     },
     refetchOnWindowFocus: false,
   });
 };
 
-
-//hook za dobijanje recommended artikala na detaljnoj strani
+// Hook za recommended proizvode
 export const useRecommendedProducts = ({ id }) => {
   return useSuspenseQuery({
     queryKey: ["recommendedProducts", id],
@@ -917,29 +915,33 @@ export const useRecommendedProducts = ({ id }) => {
       return await LIST(`/product-details/recommended/${id}`, {
         render: false,
       }).then((res) => {
-        return res?.payload;
+        const data = res?.payload;
+        if (!Array.isArray(data)) {
+          console.warn(`Greška u recommended za ID: ${id}`, data);
+          return [];
+        }
+        return data;
       });
     },
     refetchOnWindowFocus: false,
   });
 };
 
-//hook za dobijanje related artikala na detaljnoj strani
-
-
+// Hook za up-sell proizvode
 export const useUpSellProducts = ({ id }) => {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: ["upSellProducts", id],
     queryFn: async () => {
-      const res = await LIST(`/product-details/up-sell/${id}`, {
+      return await LIST(`/product-details/up-sell/${id}`, {
         render: false,
+      }).then((res) => {
+        const data = res?.payload;
+        if (!Array.isArray(data)) {
+          console.warn(`Greška u up-sell za ID: ${id}`, data);
+          return [];
+        }
+        return data;
       });
-
-      if (!res?.payload) {
-        return { items: [] };
-      }
-
-      return res.payload;
     },
     refetchOnWindowFocus: false,
   });
