@@ -1,6 +1,7 @@
 "use client";
 import { useIsMounted } from "./useIsMounted";
 import { useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   useInfiniteQuery,
   useMutation,
@@ -888,19 +889,25 @@ export const useRelatedProducts = ({ id }) => {
 };
 
 // hook za dobijanje recommended artikala na detaljnoj strani
+
 export const useCrossSellProducts = ({ id }) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ["crossSellProducts", id],
     queryFn: async () => {
-      return await LIST(`/product-details/cross-sell/${id}`, {
+      const res = await LIST(`/product-details/cross-sell/${id}`, {
         render: false,
-      }).then((res) => {
-        return res?.payload;
       });
+
+      if (!res?.payload) {
+        return { items: [] };
+      }
+
+      return res.payload;
     },
     refetchOnWindowFocus: false,
   });
 };
+
 
 //hook za dobijanje recommended artikala na detaljnoj strani
 export const useRecommendedProducts = ({ id }) => {
@@ -918,14 +925,21 @@ export const useRecommendedProducts = ({ id }) => {
 };
 
 //hook za dobijanje related artikala na detaljnoj strani
+
+
 export const useUpSellProducts = ({ id }) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ["upSellProducts", id],
     queryFn: async () => {
-      const res = await LIST(`/product-details/up-sell/${id}`, { render: false });
+      const res = await LIST(`/product-details/up-sell/${id}`, {
+        render: false,
+      });
 
-      // Ako payload ne postoji (npr. zbog greške sa tokenom), vrati prazan niz da ne puca UI
-      return res?.payload || { items: [] };
+      if (!res?.payload) {
+        return { items: [] };
+      }
+
+      return res.payload;
     },
     refetchOnWindowFocus: false,
   });
